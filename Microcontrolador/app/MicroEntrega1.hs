@@ -28,6 +28,7 @@ xt8088 = Microprocesador {
 
 -- Punto 2:
 
+
 nop :: Microprocesador -> Microprocesador
 nop microprocesador = microprocesador { programCounter=programCounter microprocesador + 1}
 
@@ -40,9 +41,13 @@ nop microprocesador = microprocesador { programCounter=programCounter microproce
 
 lodv :: Int -> Microprocesador -> Microprocesador
 lodv valor microprocesador = microprocesador { acumuladorA = valor }
+--lodv valor microprocesador = microprocesador { acumuladorA = valor, programCounter = nop microprocesador }
 
 swap :: Microprocesador -> Microprocesador
 swap microprocesador = microprocesador { acumuladorA = acumuladorB microprocesador, acumuladorB = acumuladorA microprocesador }
 
 add :: Microprocesador -> Microprocesador
 add microprocesador = microprocesador { acumuladorA = acumuladorA microprocesador + acumuladorB microprocesador, acumuladorB = 0}
+
+-- *MicroEntrega1> (nop.add.nop.(lodv 22).nop.swap.nop.(lodv 10)) xt8088
+--  Microprocesador {memoria = [], acumuladorA = 32, acumuladorB = 0, programCounter = 4, etiqueta = ""}
