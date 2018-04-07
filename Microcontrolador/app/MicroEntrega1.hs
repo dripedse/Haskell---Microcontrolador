@@ -29,6 +29,7 @@ xt8088 = Microprocesador {
 -- Punto 2:
 
 
+
 nop :: Microprocesador -> Microprocesador
 nop microprocesador = microprocesador { programCounter=programCounter microprocesador + 1}
 
@@ -40,14 +41,27 @@ nop microprocesador = microprocesador { programCounter=programCounter microproce
 -- Punto 3
 
 lodv :: Int -> Microprocesador -> Microprocesador
-lodv valor microprocesador = microprocesador { acumuladorA = valor }
---lodv valor microprocesador = microprocesador { acumuladorA = valor, programCounter = nop microprocesador }
+lodv value microprocesador = microprocesador { acumuladorA = value, programCounter = programCounter microprocesador + 1}
+--lodv valor microprocesador = microprocesador { acumuladorA = valor }
 
 swap :: Microprocesador -> Microprocesador
-swap microprocesador = microprocesador { acumuladorA = acumuladorB microprocesador, acumuladorB = acumuladorA microprocesador }
+swap microprocesador = microprocesador { acumuladorA = acumuladorB microprocesador, acumuladorB = acumuladorA microprocesador, programCounter = programCounter microprocesador + 1 }
+-- swap microprocesador = microprocesador { acumuladorA = acumuladorB microprocesador, acumuladorB = acumuladorA microprocesador 1 }
 
 add :: Microprocesador -> Microprocesador
-add microprocesador = microprocesador { acumuladorA = acumuladorA microprocesador + acumuladorB microprocesador, acumuladorB = 0}
-
+add microprocesador = microprocesador { acumuladorA = acumuladorA microprocesador + acumuladorB microprocesador, acumuladorB = 0, programCounter = programCounter microprocesador + 1}
+-- add microprocesador = microprocesador { acumuladorA = acumuladorA microprocesador + acumuladorB microprocesador, acumuladorB = 0}
 -- *MicroEntrega1> (nop.add.nop.(lodv 22).nop.swap.nop.(lodv 10)) xt8088
 --  Microprocesador {memoria = [], acumuladorA = 32, acumuladorB = 0, programCounter = 4, etiqueta = ""}
+
+-- *MicroEntrega1> (add.(lodv 22).swap.(lodv 10)) xt8088
+--  Microprocesador {memoria = [], acumuladorA = 32, acumuladorB = 0, programCounter = 4, etiqueta = ""}
+
+
+-- Punto 4
+
+divide :: Microprocesador -> Microprocesador
+divide microprocesador | acumuladorB microprocesador /= 0 = microprocesador { acumuladorA = div (acumuladorA microprocesador) (acumuladorB microprocesador), acumuladorB = 0, programCounter = programCounter microprocesador + 1}
+                       | otherwise = microprocesador { etiqueta = "DIVISION BY ZERO", programCounter = programCounter microprocesador + 1}
+
+-- str address value microprocesador = microprocesador { memoria = }                        
