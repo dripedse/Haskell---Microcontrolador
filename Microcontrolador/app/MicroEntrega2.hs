@@ -1,4 +1,4 @@
-module MicroEntrega1 where
+module MicroEntrega2 where
 -- Punto 1:
 
 -- Se utiliza Record Syntax dado que evita definiciones reduntantes y suma expresividad al modelado de la informacion. 
@@ -9,12 +9,16 @@ module MicroEntrega1 where
 --Para solucionar error no instance for Show
 import Text.Show.Functions()
 
+type Instruccion = Microprocesador -> Microprocesador
+type Programa = [Instruccion]
+
 data Microprocesador = Microprocesador {
     memoria :: [Int],
     acumuladorA :: Int,
     acumuladorB :: Int,
     programCounter :: Int,
-    mensajeError :: String
+    mensajeError :: String,
+    programa :: Programa
 } deriving (Show)
 
 
@@ -25,8 +29,9 @@ xt8088 = Microprocesador {
     acumuladorB=0,
     programCounter=0,
     mensajeError=""
+   
 }
-type Instruccion = Microprocesador -> Microprocesador
+
 
 aumentarPC :: Instruccion
 aumentarPC microprocesador = microprocesador { programCounter=programCounter microprocesador + 1}
@@ -37,15 +42,12 @@ ejecutar instruccion  = aumentarPC.instruccion
 ejecutarMuchas :: [Instruccion] -> Microprocesador -> Microprocesador
 ejecutarMuchas instrucciones micro = foldr ejecutar micro instrucciones
 
+
 -- Punto 2:
 
 nop :: Instruccion
 nop microprocesador = microprocesador 
 
--- En consola:
--- *MicroEntrega1> (ejecutar nop.ejecutar nop.ejecutar nop) xt8088
--- Microprocesador {memoria = [], acumulador1 = 0, acumulador2 = 0, programCounter = 3, mensajeError = ""}
--- Se uso el concepto de composicion de funciones
 
 -- Punto 3
 
@@ -58,9 +60,7 @@ swap microprocesador = microprocesador { acumuladorA = acumuladorB microprocesad
 add :: Instruccion
 add microprocesador = microprocesador { acumuladorA = acumuladorA microprocesador + acumuladorB microprocesador, acumuladorB = 0}
 
---En consola:
--- *MicroEntrega1> (add.(lodv 22).swap.(lodv 10)) xt8088
---  Microprocesador {memoria = [], acumuladorA = 32, acumuladorB = 0, programCounter = 4, mensajeError = ""}
+
 
 
 -- Punto 4
@@ -81,9 +81,51 @@ lod address microprocesador = microprocesador {  acumuladorA= cargarAcumulador a
 cargarAcumulador :: Int -> [Int] -> Int
 cargarAcumulador address memory = memory !! (address-1)
 
--- En consola:
--- *MicroEntrega1> (divide.(lod 1) . swap . (lod 2) . (str 2 0) . (str 1 2)) xt8088
---  Microprocesador {memoria = [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], acumuladorA = 2, acumuladorB = 0, programCounter = 6, mensajeError = "DIVISION BY ZERO"}
+-- Punto 5
+
+cargarPrograma :: Programa -> Microprocesador -> Microprocesador
+cargarPrograma programaNuevo microprocesador = microprocesador { programa = programaNuevo}
+
+suma10y22 :: Programa
+suma10y22 = [add, lodv 22, swap, lodv 10]
+
+division2por0 :: Programa 
+division2por0 = [divide, lod 1, swap, lod 2, str 2 0, str 1 2]
+ 
+
+-- Punto 6
+
+ejecutarPrograma :: Microprocesador -> Microprocesador
+ejecutarPrograma micro = ejecutarMuchas (programa micro) micro
+
+
+-- Punto  7
+
+ifNZ :: Programa -> Microprocesador -> Microprocesador
+ifNZ instrucciones micro | (acumuladorA micro) /= 0 = ejecutarMuchas instrucciones micro
+                         | otherwise = micro
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 -- CASOS DE PRUEBA: 
