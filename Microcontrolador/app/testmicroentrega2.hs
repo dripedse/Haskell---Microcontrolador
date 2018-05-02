@@ -98,20 +98,20 @@ runTests = hspec $ do
         it "ejecutar IFNZ sobre un micro que tiene acumulador A igual a cero ejecuta las instrucciones - sin efecto sobre acumulador B" $ do
             ((acumuladorB . ifNZ [swap, lodv 3]) xt8088) `shouldBe` 0
 
-    --describe "Test Punto 2.4 - Depuración de un programa" $ do
-      --  it "Depuración de un programa - Deben quedar solo las instrucciones que modifican el estado interno del microprocesador" $ do
-        --    ((length . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 2
+    describe "Test Punto 2.4 - Depuración de un programa" $ do
+         it "Depuración de un programa - Deben quedar solo las instrucciones que modifican el estado interno del microprocesador" $ do
+           ((length . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 2
         
-       -- it "Depuración de un programa - Chequeo primera instrucción" $ do
-         --   ((acumuladorA . flip ($) xt8088 . head . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 133
+         it "Depuración de un programa - Chequeo primera instrucción" $ do
+              ((acumuladorA . flip ($) xt8088 . head . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 133
                     
-       -- it "Depuración de un programa - Chequeo segunda instrucción" $ do
-         --   ((flip (!!) 0 . memoria . flip ($) xt8088 . flip (!!) 1 . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 3
+         it "Depuración de un programa - Chequeo segunda instrucción" $ do
+              ((flip (!!) 0 . memoria . flip ($) xt8088 . flip (!!) 1 . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 3
             
     --describe "Test Punto 2.5 - Orden de la memoria" $ do
-      --  it "Micro con la memoria ordenada" $ do
-        --    (memoriaOrdenada at8086) `shouldBe` True
+     --    it "Micro con la memoria ordenada" $ do
+       --    (memoriaOrdenada at8086) `shouldBe` True
                     
-        --it "Micro con la memoria desordenada" $ do
-          --  (memoriaOrdenada microDesorden) `shouldBe` False
+         --it "Micro con la memoria desordenada" $ do
+           --  (memoriaOrdenada microDesorden) `shouldBe` False
                 

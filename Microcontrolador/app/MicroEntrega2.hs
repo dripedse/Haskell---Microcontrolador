@@ -28,7 +28,8 @@ xt8088 = Microprocesador {
     acumuladorA=0,
     acumuladorB=0,
     programCounter=0,
-    mensajeError=""
+    mensajeError="",
+    programa = vacio
    
 }
 
@@ -91,6 +92,9 @@ suma10y22 = [add, lodv 22, swap, lodv 10]
 
 division2por0 :: Programa 
 division2por0 = [divide, lod 1, swap, lod 2, str 2 0, str 1 2]
+
+vacio :: Programa
+vacio = []
  
 
 -- Punto 6
@@ -105,7 +109,16 @@ ifNZ :: Programa -> Microprocesador -> Microprocesador
 ifNZ instrucciones micro | (acumuladorA micro) /= 0 = ejecutarMuchas instrucciones micro
                          | otherwise = micro
 
+-- punto 8
 
+depurar :: Microprocesador -> [Instruccion] -> [Instruccion]
+depurar micro programaTest = filter (instruccionOk micro) programaTest
+
+instruccionOk :: Microprocesador -> Instruccion -> Bool
+instruccionOk microTest instruccion = (acumuladorA.ejecutar instruccion) microTest /= 0 && (acumuladorB.ejecutar instruccion) microTest /= 0 && not (memoriaCero  microTest instruccion)
+
+memoriaCero :: Microprocesador -> Instruccion -> Bool
+memoriaCero micro instruccion = all (==0) ((memoria.ejecutar instruccion) micro)
 
 
 
@@ -145,7 +158,8 @@ fp20 = Microprocesador {
     acumuladorA=7,
     acumuladorB=24,
     programCounter=0,
-    mensajeError=""
+    mensajeError="",
+    programa = vacio
 }
 -- *MicroEntrega1> swap fp20
 -- Microprocesador {memoria = [0], acumuladorA = 24, acumuladorB = 7, programCounter = 1, mensajeError = ""}
@@ -160,7 +174,8 @@ at8086 = Microprocesador {
     acumuladorA=0,
     acumuladorB=0,
     programCounter=0,
-    mensajeError=""
+    mensajeError="",
+    programa = vacio
 }
 
 -- *MicroEntrega1> str 2 5 at8086
