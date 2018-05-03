@@ -108,10 +108,10 @@ runTests = hspec $ do
          it "Depuración de un programa - Chequeo segunda instrucción" $ do
               ((flip (!!) 0 . memoria . flip ($) xt8088 . flip (!!) 1 . depurar xt8088) [swap, nop, lodv 133, lodv 0, str 1 3, str 2 0]) `shouldBe` 3
             
-    --describe "Test Punto 2.5 - Orden de la memoria" $ do
-     --    it "Micro con la memoria ordenada" $ do
-       --    (memoriaOrdenada at8086) `shouldBe` True
+    describe "Test Punto 2.5 - Orden de la memoria" $ do
+         it "Micro con la memoria ordenada" $ do
+           (memoriaOrdenada at8086) `shouldBe` True
                     
-         --it "Micro con la memoria desordenada" $ do
-           --  (memoriaOrdenada microDesorden) `shouldBe` False
+         it "Micro con la memoria desordenada" $ do
+             (memoriaOrdenada microDesorden) `shouldBe` False
                 
