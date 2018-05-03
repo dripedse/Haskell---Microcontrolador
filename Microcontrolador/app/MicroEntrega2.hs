@@ -75,10 +75,10 @@ divide microprocesador | acumuladorB microprocesador /= 0 = microprocesador { ac
 str :: Int -> Int -> Instruccion
 str address value microprocesador= microprocesador { memoria = agregarDato (memoria microprocesador) address value}
 agregarDato :: [a] -> Int -> a -> [a]
-agregarDato memory address value = take (address-1) memory ++ [value] ++ drop (address) memory
+agregarDato memory address value = take (address-1) memory ++ [value] ++ drop address memory
 
 lod :: Int -> Instruccion
-lod address microprocesador = microprocesador {  acumuladorA= cargarAcumulador address (memoria microprocesador)}
+lod address microprocesador = microprocesador {  acumuladorA= cargarAcumulador  address (memoria microprocesador)}
 cargarAcumulador :: Int -> [Int] -> Int
 cargarAcumulador address memory = memory !! (address-1)
 
@@ -115,10 +115,10 @@ depurar :: Microprocesador -> [Instruccion] -> [Instruccion]
 depurar micro  = filter (instruccionOk micro) 
 
 instruccionOk :: Microprocesador -> Instruccion -> Bool
-instruccionOk microTest instruccion = (acumuladorA.ejecutar instruccion) microTest /= 0 || (acumuladorB.ejecutar instruccion) microTest /= 0 || not (memoriaCero  microTest instruccion)
+instruccionOk microTest instruccion = (acumuladorA.ejecutar instruccion) microTest /= 0 || (acumuladorB.ejecutar instruccion) microTest /= 0 || (memoriaCero  microTest instruccion)
 
 memoriaCero :: Microprocesador -> Instruccion -> Bool
-memoriaCero micro instruccion = all (==0) ((memoria.ejecutar instruccion) micro)
+memoriaCero micro instruccion = notElem 0 $ (memoria.ejecutar instruccion) micro
 
 -- Punto 9 
 
