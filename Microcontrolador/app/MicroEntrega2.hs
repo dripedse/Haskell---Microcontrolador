@@ -115,10 +115,10 @@ depurar :: Microprocesador -> [Instruccion] -> [Instruccion]
 depurar micro  = filter (instruccionOk micro) 
 
 instruccionOk :: Microprocesador -> Instruccion -> Bool
-instruccionOk microTest instruccion = (acumuladorA.ejecutar instruccion) microTest /= 0 || (acumuladorB.ejecutar instruccion) microTest /= 0 || (memoriaCero  microTest instruccion)
+instruccionOk microTest instruccion = (acumuladorA.ejecutar instruccion) microTest /= 0 || (acumuladorB.ejecutar instruccion) microTest /= 0 || not (memoriaCero  microTest instruccion)
 
 memoriaCero :: Microprocesador -> Instruccion -> Bool
-memoriaCero micro instruccion = notElem 0 $ (memoria.ejecutar instruccion) micro
+memoriaCero micro instruccion = all (==0)  ((memoria.ejecutar instruccion) micro)
 
 -- Punto 9 
 
